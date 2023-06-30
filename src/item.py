@@ -16,13 +16,7 @@ class Item:
         self.name = name
         self.price = price
         self.quantity = quantity
-
-    def __repr__(self):
-        """
-        Возвращает название, цену и количество товара в виде кортежа
-        """
-
-        return (self.name, self.price, self.quantity)
+        Item.all.append(self)
 
     def calculate_total_price(self) -> float:
         """
@@ -33,9 +27,9 @@ class Item:
 
         return self.price * self.quantity
 
-    def apply_discount(self, percent) -> None:
+    def apply_discount(self) -> None:
         """
         Применяет установленную скидку для конкретного товара.
         """
 
-        return self.calculate_total_price() * (1 - (percent/100))
+        self.price = self.price * Item.pay_rate

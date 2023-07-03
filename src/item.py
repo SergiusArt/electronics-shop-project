@@ -1,7 +1,15 @@
+from csv import DictReader
+from pathlib import Path
+
+
 class Item:
     """
     Класс для представления товара в магазине.
     """
+
+    ROOT = Path(__file__).resolve().parent.parent
+    DIR_ITEMS = Path.joinpath(ROOT, 'src/items.csv')
+
     pay_rate = 1.0
     all = []
 
@@ -13,10 +21,27 @@ class Item:
         :param price: Цена за единицу товара.
         :param quantity: Количество товара в магазине.
         """
-        self.name = name
+
+        self.__name = name
         self.price = price
         self.quantity = quantity
         Item.all.append(self)
+
+    @property
+    def name(self):
+        """
+        Позволяет обращаться к имени как к аргументу
+        """
+
+        return self.__name
+
+    @name.setter
+    def name(self, new_name):
+        """
+        Позволяет изменять имя и оставляет первые 10 символов
+        """
+
+        self.__name = new_name[:10]
 
     def calculate_total_price(self) -> float:
         """
@@ -32,4 +57,24 @@ class Item:
         Применяет установленную скидку для конкретного товара.
         """
 
-        self.price = self.price * Item.pay_rate
+        self.price = self.price * self.pay_rate
+
+    @classmethod
+    def instantiate_from_csv(cls):
+        """
+        Инициализирует экземпляры класса данными из файла
+        """
+        cls.all = []
+        with open(Item.DIR_ITEMS, 'r', encoding='windows-1251') as csvfile:
+            data = DictReader(csvfile)
+            for item in data:
+                cls(name=item['name'], price=cls.string_to_number(item['price']),
+                    quantity=cls.string_to_number(item['quantity']))
+
+    @staticmethod
+    def string_to_number(str_num):
+        """
+        Возвращает число из числа-строки
+        """
+
+        return int(float(str_num))

@@ -26,6 +26,10 @@ def test_apply_discount(one_item):
 
 
 def test_name(one_item):
+    """
+    Проверяем, как работает вызов метода-атрибута имени и как длина имени обрезается на 10 символах
+    """
+
     assert one_item.name == 'Toster'
 
     one_item.name = 'СуперСмартфон'
@@ -33,6 +37,10 @@ def test_name(one_item):
 
 
 def test_instantiate_from_csv(one_item):
+    """
+    Проверяем создание объектов из данных файлов формата csv
+    """
+
     one_item.instantiate_from_csv()  # создание объектов из данных файла
     assert len(one_item.all) == 5  # в файле 5 записей с данными по товарам
 
@@ -43,3 +51,17 @@ def test_instantiate_from_csv(one_item):
     assert one_item.string_to_number('5.0') == 5
     assert one_item.string_to_number('5.5') == 5
 
+
+def test_repr(one_item):
+    """
+    Магический метод repr должен возвращать название класса и его атрибуты инициализации
+    """
+    assert repr(one_item) == "Item('Toster', 10000, 10)"
+
+
+def test_str(one_item):
+    """
+    Магический метод str должен возвращать имя экземпляра
+    """
+
+    assert str(one_item) == 'Toster'

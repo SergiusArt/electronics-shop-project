@@ -1,14 +1,14 @@
 from csv import DictReader
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parent.parent
+DIR_ITEMS = Path.joinpath(ROOT, 'src', 'items.csv')
+
 
 class Item:
     """
     Класс для представления товара в магазине.
     """
-
-    ROOT = Path(__file__).resolve().parent.parent
-    DIR_ITEMS = Path.joinpath(ROOT, 'src/items.csv')
 
     pay_rate = 1.0
     all = []
@@ -26,6 +26,20 @@ class Item:
         self.price = price
         self.quantity = quantity
         Item.all.append(self)
+
+    def __repr__(self):
+        """
+        Информация по классу для разработчика
+        """
+
+        return f"{self.__class__.__name__}('{self.name}', {self.price}, {self.quantity})"
+
+    def __str__(self):
+        """
+        Информация по классу для пользователя
+        """
+
+        return self.__name
 
     @property
     def name(self):
@@ -65,7 +79,7 @@ class Item:
         Инициализирует экземпляры класса данными из файла
         """
         cls.all = []
-        with open(Item.DIR_ITEMS, 'r', encoding='windows-1251') as csvfile:
+        with open(DIR_ITEMS, 'r', encoding='windows-1251') as csvfile:
             data = DictReader(csvfile)
             for item in data:
                 cls(name=item['name'], price=cls.string_to_number(item['price']),

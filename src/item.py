@@ -1,6 +1,7 @@
 from csv import DictReader
 from pathlib import Path
 
+
 ROOT = Path(__file__).resolve().parent.parent
 DIR_ITEMS = Path.joinpath(ROOT, 'src', 'items.csv')
 
@@ -40,6 +41,11 @@ class Item:
         """
 
         return self.__name
+
+    def __add__(self, other):
+        if issubclass(other.__class__, Item):
+            return self.quantity + other.quantity
+        return None
 
     @property
     def name(self):

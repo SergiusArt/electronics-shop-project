@@ -1,5 +1,6 @@
 import pytest
 from src.item import Item
+from src.phone import Phone
 
 
 @pytest.fixture
@@ -65,3 +66,15 @@ def test_str(one_item):
     """
 
     assert str(one_item) == 'Toster'
+
+
+def test_add(one_item):
+    """
+    Магический метод add должен складывать количество экземпляров Item или Phone
+    """
+
+    item1 = Item("Смартфон", 10000, 20)
+    phone1 = Phone("iPhone 14", 120_000, 5, 2)
+    assert item1 + phone1 == 25
+    assert item1 + 1 == None
+

@@ -6,6 +6,14 @@ ROOT = Path(__file__).resolve().parent.parent
 DIR_ITEMS = Path.joinpath(ROOT, 'src', 'items.csv')
 
 
+class InstantiateCSVError(Exception):
+    """
+    Ошибка: файл повреждён
+    """
+
+    pass
+
+
 class Item:
     """
     Класс для представления товара в магазине.
@@ -81,16 +89,22 @@ class Item:
         self.price = self.price * self.pay_rate
 
     @classmethod
-    def instantiate_from_csv(cls):
+    def instantiate_from_csv(cls, path_name=DIR_ITEMS):
         """
         Инициализирует экземпляры класса данными из файла
         """
         cls.all = []
-        with open(DIR_ITEMS, 'r', encoding='windows-1251') as csvfile:
-            data = DictReader(csvfile)
-            for item in data:
-                cls(name=item['name'], price=cls.string_to_number(item['price']),
-                    quantity=cls.string_to_number(item['quantity']))
+        try:
+            with open(path_name, 'r', encoding='windows-1251') as csvfile:
+                data = DictReader(csvfile)
+                for item in data:
+                    cls(name=item['name'], price=cls.string_to_number(item['price']),
+                        quantity=cls.string_to_number(item['quantity']))
+
+        except FileNotFoundError:
+            raise FileNotFoundError('Отсутствует файл item.csv')
+        except KeyError:
+            raise InstantiateCSVError("Файл item.csv поврежден")
 
     @staticmethod
     def string_to_number(str_num):

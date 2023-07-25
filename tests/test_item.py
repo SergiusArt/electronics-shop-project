@@ -1,5 +1,7 @@
+from pathlib import Path
+
 import pytest
-from src.item import Item
+from src.item import Item, InstantiateCSVError, ROOT
 from src.phone import Phone
 
 
@@ -78,3 +80,15 @@ def test_add(one_item):
     assert item1 + phone1 == 25
     assert item1 + 1 == None
 
+
+def test_file_error(one_item):
+    """
+    Проверка на наличие файла (исключение)
+    Проверка на целостность файла (исключение)
+    """
+
+    with pytest.raises(FileNotFoundError):
+        Item.instantiate_from_csv('111')
+
+    with pytest.raises(InstantiateCSVError):
+        Item.instantiate_from_csv(Path.joinpath(ROOT, 'tests', 'items_test_file.csv'))
